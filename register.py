@@ -1,14 +1,24 @@
 import tkinter as tk
 import cv2
 import os
-from utils import new_register
+from utils import new_register,add_data_to_json
+
+
+def registration(rollNo,name):
+    print(name +" "+rollNo)
+    if name:
+        capture_images(name,rollNo)
+        # status_label.config(text="Images captured successfully.")
+    # else:
+        # status_label.config(text="Please enter a name.")
+
 # Create a directory if it does not exist
 def create_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 # Capture images from webcam and save
-def capture_images(name):
+def capture_images(name,rollNo):
     # Initialize the webcam
     cap = cv2.VideoCapture(0)
 
@@ -57,35 +67,36 @@ def capture_images(name):
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
         cv2.imshow('Capture Images', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q') or count == 225:
+        if cv2.waitKey(1) & 0xFF == ord('q') or count == 25:
             break
 
     cap.release()
     cv2.destroyAllWindows()
+    add_data_to_json(rollNo,name)
     new_register(name)
 
-# Create UI
-def start_capture():
-    name = name_entry.get()
-    if name:
-        capture_images(name)
-        status_label.config(text="Images captured successfully.")
-    else:
-        status_label.config(text="Please enter a name.")
+# # Create UI
+# def start_capture():
 
-root = tk.Tk()
-root.title("Face Image Capture")
+#     if name:
+#         capture_images(name)
+#         status_label.config(text="Images captured successfully.")
+#     else:
+#         status_label.config(text="Please enter a name.")
 
-name_label = tk.Label(root, text="Enter Name:")
-name_label.pack()
+# root = tk.Tk()
+# root.title("Face Image Capture")
 
-name_entry = tk.Entry(root)
-name_entry.pack()
+# name_label = tk.Label(root, text="Enter Name:")
+# name_label.pack()
 
-capture_button = tk.Button(root, text="Capture Images", command=start_capture)
-capture_button.pack()
+# name_entry = tk.Entry(root)
+# name_entry.pack()
 
-status_label = tk.Label(root, text="")
-status_label.pack()
+# capture_button = tk.Button(root, text="Capture Images", command=start_capture)
+# capture_button.pack()
 
-root.mainloop()
+# status_label = tk.Label(root, text="")
+# status_label.pack()
+
+# root.mainloop()

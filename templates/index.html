@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/images/college_background.jpg'); /* Replace 'background.jpg' with the path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .panel {
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Background color with opacity */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 0 10px; /* Add margin between panels */
+            max-width: 400px; /* Limit panel width */
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-items: center;
+            justify-content: center;
+        }
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .project-title {
+            font-family: 'Anton', sans-serif; /* Apply Google Font */
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+            margin: 2%;
+            border-radius: 10px;
+            text-align: center;
+            padding: 2%;
+            font-weight: 1000;
+            
+            background-color: rgb(240, 255, 255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div >
+       <h1 class="project-title "> AUTOMATIC ATTENDANCE SYSTEM USING DEEP LEARNING
+    </h1>
+    </div>
+    <div class="container text-center">
+        <div class="panel">
+            <h2>Register New Student</h2>
+            <form action="/register" method="post"  id="registerForm">
+                <div class="form-group font-weight-bold" >
+                    <label for="rollNo" >Roll No:</label>
+                    <input type="text" class="form-control" id="rollNo" required name="rollNo">
+                </div>
+                <div class="form-group font-weight-bold">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name"  required name="name">
+                </div>
+                <button type="submit" class="btn btn-primary" >Capture Image</button>
+            </form>
+        </div>
+
+        <div class="panel" >
+            <h2>Detect</h2>
+            <form action="/main" method="post" id="detect">
+                <button type="submit" class="btn btn-primary" onclick="clicking_detect()" >Detect</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function clicking_detect(){
+            windows.alert("Please wait a minute")
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            alert("please wait...")
+            event.preventDefault(); // Prevent form submission
+            
+            // Get form data
+            var formData = new FormData(this);
+
+            // Send form data to Flask route
+            fetch('/register', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Display response string in an alert dialog
+                window.alert(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('An error occurred. Please try again.');
+            });
+        });
+        document.getElementById('detect').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get form data
+            var formData = new FormData(this);
+
+            // Send form data to Flask route
+            fetch('/main', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Display response string in an alert dialog
+                window.alert(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert('An error occurred. Please try again.');
+            });
+        });
+    </script>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- <script>
+        function captureImage() {
+            // Add your code to capture image here
+            var rollNo = document.getElementById("rollNo").value;
+            var name = document.getElementById("name").value;
+            // Create a JavaScript object
+            var studentData = {
+                "RollNo": rollNo,
+                "Name": name,
+                "image_path": "./dataset/"+name
+            };
+            // Convert JavaScript object to JSON
+           
+            fetch('static/data/students.json') // Replace 'data.json' with the path to your JSON file
+            .then(response => response.json())
+            .then(data => {
+                // Print the JSON data
+                data["students"][rollNo]=studentData
+
+                console.log(data["students"]);
+            
+            
+                var jsonString = JSON.stringify(data, null, 2);
+
+        // Create a Blob with the JSON string
+                var blob = new Blob([jsonString], { type: 'application/json' });
+
+                // Create a link element to trigger the download
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = './student_db/students.json'; // File name
+                a.click();
+            })
+            .catch(error => console.error('Error loading JSON:', error));
+        }
+
+        function detect() {
+            // Add your code to connect to the main file here
+            alert('Detecting...');
+        }
+    </script> -->
+</body>
+</html>
