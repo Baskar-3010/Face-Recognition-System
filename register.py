@@ -1,7 +1,7 @@
 import tkinter as tk
 import cv2
 import os
-
+from utils import new_register
 # Create a directory if it does not exist
 def create_directory(directory):
     if not os.path.exists(directory):
@@ -57,11 +57,12 @@ def capture_images(name):
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
         cv2.imshow('Capture Images', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q') or count == 200:
+        if cv2.waitKey(1) & 0xFF == ord('q') or count == 225:
             break
 
     cap.release()
     cv2.destroyAllWindows()
+    new_register(name)
 
 # Create UI
 def start_capture():

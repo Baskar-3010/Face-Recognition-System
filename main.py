@@ -3,7 +3,7 @@ import cv2
 import numpy as np 
 import time
 import json
-
+from os.path import exists
 from facenet_pytorch import InceptionResnetV1
 import torch
 from retinaface import RetinaFace
@@ -39,9 +39,9 @@ class_embeddings_dict={}
 
 with open(constants.students_json_file,"r") as f:
     _json_data = json.load(f)
-#  known_names = [_json_data["students"][reg_no]["name"] for reg_no in _json_data['students']]
+known_names = [_json_data["students"][reg_no]["Name"] for reg_no in _json_data['students']]
 
-known_names=[]
+# known_names=[]
 
 def extract_embedding(image):
     image_tensor = ToTensor()(image)
@@ -62,25 +62,28 @@ def mean(tensor_list):
     print(mean_tensor)
     return mean_tensor
 
-# Iterate over each class (person) in the dataset
-for class_name in loading_bar(class_names, desc='Processing dataset'):
-    class_dir = os.path.join(data_dir, class_name)
-    class_embeddings = []
-    known_names.append(class_name)
-    # Iterate over each image in the class directory
-    for filename in loading_bar(os.listdir(class_dir)):
-        if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
-            image_path = os.path.join(class_dir, filename)
-            image = cv2.imread(image_path)
-            embedding = calculate_embedding(image,model)
-            class_embeddings.append(embedding)
-    # Calculate the average embedding for the class
-    class_average_embedding = mean(class_embeddings)
-    class_embeddings_dict[class_name] = class_average_embedding
-    known_faces.append(class_average_embedding)
-print(class_embeddings_dict)
-
-# Initialize video capture
+if exists('tensor_list.pt'):
+    known_faces=torch.load('tensor_list.pt')
+    # print(known_faces)
+else:
+    # Iterate over each class (person) in the dataset
+    for class_name in loading_bar(class_names, desc='Processing dataset'):
+        class_dir = os.path.join(data_dir, class_name)
+        class_embeddings = []
+        # Iterate over each image in the class directory
+        for filename in loading_bar(os.listdir(class_dir)):
+            if filename.endswith(".jpg") or filename.endswith(".jpeg") or filename.endswith(".png"):
+                image_path = os.path.join(class_dir, filename)
+                image = cv2.imread(image_path)
+                embedding = calculate_embedding(image,model)
+                class_embeddings.append(embedding)
+        # Calculate the average embedding for the class
+        class_average_embedding = mean(class_embeddings)
+        class_embeddings_dict[class_name] = class_average_embedding
+        known_faces.append(class_average_embedding)
+    torch.save(known_faces,'tensor_file.pt')
+    print(class_embeddings_dict)
+#initialize video capture
 video_capture = cv2.VideoCapture(constants.input_format)
 
 # Initialize variables for FPS calculation
@@ -107,10 +110,13 @@ while video_capture.isOpened():
                 detected_embedding = calculate_embedding(cropped_face,model)
                 similarities = [F.cosine_similarity(detected_embedding, known_embedding).item() for known_embedding in known_faces]
                 max_index = np.argmax(similarities)
+                # print(known_faces[0])
+                print(max_index)
                 if similarities[max_index] > constants.threshold:
                     name = known_names[max_index]
                     current_student_regno = students_reg_no[max_index]
                     info = dict(student_db_handler.get_info_from_reg_no(current_student_regno))
+                    print(info)
                     col_name = "Status"
                 
                     if info[col_name] in ["P","A"]:
