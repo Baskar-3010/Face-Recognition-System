@@ -1,0 +1,16 @@
+{
+    "students": {
+        "COLLEGE_001":
+        {
+            "reg_no":"COLLEGE_001",
+            "name":"sriram",
+            "image_path":"./images/sriram.jpg"
+        },
+        "COLLEGE_002":
+        {
+            "reg_no":"COLLEGE_002",
+            "name":"aiyaz",
+            "image_path":"./images/aiyaz.jpg"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "students": {
+        
+        
+        "20p306": {
+            "RollNo": "20p306",
+            "Name": "Baskar",
+            "image_path": "./dataset/Baskar"
+        },
+        "20p321": {
+            "RollNo": "20p321",
+            "Name": "Yogesh",
+            "image_path": "./dataset/Yogesh"
+        },
+        "20p301": {
+            "RollNo": "20p301",
+            "Name": "Baskar2",
+            "image_path": "./dataset/Baskar"
+        }
+    }
+}
