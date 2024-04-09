@@ -154,4 +154,3 @@ def main_fun():
     cv2.destroyAllWindows()
 
 
-main_fun()
