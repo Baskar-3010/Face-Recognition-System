@@ -16,10 +16,10 @@ input_format = 0
 #input_format = "C:\\Users\\ybask\\OneDrive\\Desktop\\nitheesh.jpg"
 
 
-students_json_file = "./student_db/students.json"
+students_json_file = "./static/data/students.json"
 attendance_file = "./student_db/attendance/attendance"
 known_images_folder = "./Color"  # Path to the folder of known images
-
+tensor_file_name='tensor_list.pt'
 
 threshold = 0.7
 
